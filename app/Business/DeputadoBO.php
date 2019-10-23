@@ -80,15 +80,25 @@ class DeputadoBO extends AbstractBO
 
             foreach ($deputadosAtivos as $deputadoAtivo) {
                 $complementoDeputado = $this->getDadosAbertosService()->getComplementosDeputado($deputadoAtivo['id']);
-                $this->validarDeputado($complementoDeputado['deputado']);
+                $complementoDeputadoAUX = $complementoDeputado['deputado'];
 
-                $deputadoAtivo = $this->formatarArrayDeputado($complementoDeputado['deputado']);
+                $this->validarDeputado($complementoDeputadoAUX);
+                $deputadoFormatado = $this->formatarArrayDeputado($complementoDeputadoAUX);
 
-                if (!empty($this->getDeputadoPorCodigo($deputadoAtivo['co_deputado']))) {
-                    $deputado = $this->update($deputadoAtivo);
+                $coDeputado = $deputadoFormatado['co_deputado'];
+                $deputadoCadastrado = $this->getDeputadoPorCodigo($coDeputado);
+                if (!empty($deputadoCadastrado)) {
+                    $this->update($deputadoAtivo);
+                    $deputado = $this->getDeputadoPorCodigo($coDeputado);
                 } else {
-                    $deputado = $this->deputadoRepository->create($deputadoAtivo);
+                    $deputado = $this->deputadoRepository->create($deputadoFormatado);
                 }
+
+                $this->getRedeSocialDeputadoBO()->persist(
+                    $deputado->id,
+                    $complementoDeputadoAUX['redesSociais'],
+                    !empty($deputadoCadastrado)
+                );
 
                 array_push($deputados, $deputado);
             }
@@ -105,53 +115,25 @@ class DeputadoBO extends AbstractBO
     /**
      * Formata a instância de 'Deputado' para o modelo local.
      *
-     * @param array $deputadoAtivo
+     * @param array $complementoDeputadoAUX
      * @return array
      */
-    private function formatarArrayDeputado($deputadoAtivo)
+    private function formatarArrayDeputado($complementoDeputadoAUX)
     {
         $deputado = [];
-        $deputado['co_deputado'] = $deputadoAtivo['id'];
-        $deputado['ds_partido'] = $deputadoAtivo['partido'];
-        $deputado['ds_nome'] = $deputadoAtivo['nomeServidor'];
-        $deputado['ds_deputado'] = $deputadoAtivo['vidaProfissionalPolitica'];
+        $deputado['co_deputado'] = $complementoDeputadoAUX['id'];
+        $deputado['ds_partido'] = $complementoDeputadoAUX['partido'];
+        $deputado['ds_nome'] = $complementoDeputadoAUX['nomeServidor'];
+        $deputado['ds_deputado'] = $complementoDeputadoAUX['vidaProfissionalPolitica'];
 
         return $deputado;
-    }
-
-    /**
-     * Formata a instância de 'RedesSociaisDeputado' para o modelo local.
-     *
-     * @param array $deputadoAtivo
-     * @param integer $idDeputado
-     * @return array
-     */
-    private function formatarArrayRedesSociaisDeputado($deputadoAtivo, $idDeputado)
-    {
-        $tipoRedeSocial = 1;
-        $redesSociaisDeputado = [];
-        $redesSociais = $deputadoAtivo['redesSociais'];
-
-        foreach ($redesSociais as $redeSocial) {
-            $redesSociaisDeputado['co_rede_social'] = $redeSocial['id'];
-
-//            if (empty()) {
-//                $tipoRedeSocial
-//            }
-
-            $redesSociaisDeputado['id_deputado'] = $idDeputado;
-            $redesSociaisDeputado['ds_url_perfil'] = $redeSocial['url'];
-            $redesSociaisDeputado['id_tipo_rede_social'] = $tipoRedeSocial;
-        }
-
-        return $redesSociaisDeputado;
     }
 
     /**
      * Atualiza a instância de 'Deputado' recebida conforme o 'id' informado.
      *
      * @param array $newDeputado
-     * @return \App\Models\Deputado
+     * @return void
      * @throws \Exception
      */
     private function update(array $newDeputado)
@@ -167,8 +149,6 @@ class DeputadoBO extends AbstractBO
         } catch (\Exception $e) {
             throw $e;
         }
-
-        return $this->getDeputadoPorCodigo($newDeputado['co_deputado']);
     }
 
     /**

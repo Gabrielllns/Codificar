@@ -20,7 +20,7 @@ class CreateRedesSociaisDeputadosTable extends Migration
             $table->string('ds_url_perfil');
 
             $table->foreign('id_deputado')->references('id')->on('deputados')->onDelete('cascade');
-            $table->foreign('id_tipo_rede_social')->references('id')->on('tipo_redes_sociais')->onDelete('cascade');
+            $table->foreign('id_tipo_rede_social')->references('id')->on('tipo_rede_social')->onDelete('cascade');
         });
     }
 

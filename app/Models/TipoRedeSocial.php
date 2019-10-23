@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  * @author Gabrielllns
  */
-class TipoRedesSociais extends Model
+class TipoRedeSocial extends Model
 {
 
     /**
@@ -18,7 +18,7 @@ class TipoRedesSociais extends Model
      *
      * @var string
      */
-    protected $table = 'tipo_redes_sociais';
+    protected $table = 'tipo_rede_social';
 
     /**
      * Indicates if the model should be timestamped.

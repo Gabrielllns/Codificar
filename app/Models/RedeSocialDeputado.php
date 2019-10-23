@@ -62,7 +62,7 @@ class RedeSocialDeputado extends Model
      */
     public function tipoRedesSociais()
     {
-        return $this->belongsTo(TipoRedesSociais::class, 'id_tipo_rede_social');
+        return $this->belongsTo(TipoRedeSocial::class, 'id_tipo_rede_social');
     }
 
 }
