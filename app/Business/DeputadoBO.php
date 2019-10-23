@@ -3,6 +3,7 @@
 namespace App\Business;
 
 use App\Repository\DeputadoRepository;
+use App\To\DeputadoTO;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -88,19 +89,24 @@ class DeputadoBO extends AbstractBO
                 $coDeputado = $deputadoFormatado['co_deputado'];
                 $deputadoCadastrado = $this->getDeputadoPorCodigo($coDeputado);
                 if (!empty($deputadoCadastrado)) {
-                    $this->update($deputadoAtivo);
+                    $this->update($deputadoAtivo, $coDeputado);
                     $deputado = $this->getDeputadoPorCodigo($coDeputado);
                 } else {
                     $deputado = $this->deputadoRepository->create($deputadoFormatado);
                 }
 
-                $this->getRedeSocialDeputadoBO()->persist(
-                    $deputado->id,
-                    $complementoDeputadoAUX['redesSociais'],
-                    !empty($deputadoCadastrado)
-                );
+                $deputadoTO = DeputadoTO::newInstance($deputado);
 
-                array_push($deputados, $deputado);
+                if (!empty($complementoDeputadoAUX['redesSociais'])) {
+                    $redesSociaisDeputados = $this->getRedeSocialDeputadoBO()->persist(
+                        $deputado->id,
+                        $complementoDeputadoAUX['redesSociais']
+                    );
+
+                    $deputadoTO->setRedesSociaisDeputados($redesSociaisDeputados);
+                }
+
+                array_push($deputados, $deputadoTO);
             }
 
             DB::commit();
@@ -133,12 +139,13 @@ class DeputadoBO extends AbstractBO
      * Atualiza a instância de 'Deputado' recebida conforme o 'id' informado.
      *
      * @param array $newDeputado
+     * @param integer $coDeputado
      * @return void
      * @throws \Exception
      */
-    private function update(array $newDeputado)
+    private function update(array $newDeputado, $coDeputado)
     {
-        $deputado = $this->getDeputadoPorCodigo($newDeputado['co_deputado']);
+        $deputado = $this->getDeputadoPorCodigo($coDeputado);
 
         try {
             $deputado->ds_nome = $deputado['ds_nome'];

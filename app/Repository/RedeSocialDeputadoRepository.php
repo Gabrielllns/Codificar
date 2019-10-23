@@ -39,4 +39,30 @@ class RedeSocialDeputadoRepository
         return $this->redeSocialDeputado->create($redeSocialDeputado);
     }
 
+    /**
+     * Recupera a instância de 'RedesSociaisDeputado' conforme o 'codigo' informado.
+     *
+     * @param integer $idTipoRedeSocial
+     * @param integer $idDeputado
+     * @return \App\Models\RedeSocialDeputado
+     */
+    public function getRedeSocialDeputado($idTipoRedeSocial, $idDeputado)
+    {
+        return $this->redeSocialDeputado->with(['tipoRedesSociais'])
+            ->whereHas('tipoRedesSociais', function ($query) use ($idTipoRedeSocial) {
+                $query->where('co_rede_social', '=', $idTipoRedeSocial);
+            })->where('id_deputado', '=', $idDeputado)->first();
+    }
+
+    /**
+     * Recupera a instância de 'RedesSociaisDeputado' conforme o 'id' informado.
+     *
+     * @param integer $idRedeSocialDeputado
+     * @return \App\Models\RedeSocialDeputado
+     */
+    public function getRedeSocialDeputadoPorId($idRedeSocialDeputado)
+    {
+        return $this->redeSocialDeputado->find($idRedeSocialDeputado);
+    }
+
 }

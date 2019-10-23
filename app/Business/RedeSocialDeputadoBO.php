@@ -2,12 +2,12 @@
 
 namespace App\Business;
 
+use App\Models\RedeSocialDeputado;
 use App\Repository\RedeSocialDeputadoRepository;
 use Illuminate\Support\Facades\DB;
-use Validator;
 
 /**
- * Class ReseSocialDeputadoBO.
+ * Class RedeSocialDeputadoBO.
  *
  * @package App\Business
  * @author Gabrielllns
@@ -35,25 +35,28 @@ class RedeSocialDeputadoBO extends AbstractBO
      *
      * @param integer $idDeputado
      * @param array $redesSociais
-     * @param boolean $hasAlteracao
      * @return array
      * @throws \Exception
      */
-    public function persist($idDeputado, array $redesSociais, $hasAlteracao)
+    public function persist($idDeputado, array $redesSociais)
     {
-        $deputados = [];
+        $redesSociaisDeputados = [];
 
         try {
             DB::beginTransaction();
 
-            $redesSociaisFormatadas = $this->formatarArrayRedesSociaisDeputado($redesSociais, $idDeputado);
-            if ($hasAlteracao) {
-                $deputado = $this->update($redesSociaisFormatadas);
-            } else {
-                $deputado = $this->redeSocialDeputadoRepository->create($redesSociaisFormatadas);
-            }
+            foreach ($redesSociais as $redeSocial) {
+                $redeSocialFormatada = $this->formatarArrayRedeSocialDeputado($redeSocial, $idDeputado);
 
-            array_push($deputados, $deputado);
+                $redeSocialDeputadoCadastrada = $this->getRedeSocialDeputado($redeSocialFormatada['co_rede_social'], $idDeputado);
+                if (!empty($redeSocialDeputadoCadastrada)) {
+                    $redeSocialDeputado = $this->update($redeSocialFormatada, $redeSocialDeputadoCadastrada);
+                } else {
+                    $redeSocialDeputado = $this->redeSocialDeputadoRepository->create($redeSocialFormatada);
+                }
+
+                array_push($redesSociaisDeputados, $redeSocialDeputado);
+            }
 
             DB::commit();
         } catch (\Exception $e) {
@@ -61,62 +64,81 @@ class RedeSocialDeputadoBO extends AbstractBO
             throw $e;
         }
 
-        return $deputados;
+        return $redesSociaisDeputados;
+    }
+
+    /**
+     * Recupera a instância de 'RedesSociaisDeputado' conforme o 'ids' de 'TipoRedeSocial' e 'Deputado' informados.
+     *
+     * @param integer $idTipoRedeSocial
+     * @param integer $idDeputado
+     * @return \App\Models\RedeSocialDeputado
+     */
+    public function getRedeSocialDeputado($idTipoRedeSocial, $idDeputado)
+    {
+        return $this->redeSocialDeputadoRepository->getRedeSocialDeputado($idTipoRedeSocial, $idDeputado);
+    }
+
+    /**
+     * Recupera a instância de 'RedesSociaisDeputado' conforme o 'id' informado.
+     *
+     * @param integer $idRedeSocialDeputado
+     * @return \App\Models\RedeSocialDeputado
+     */
+    public function getRedeSocialDeputadoPorId($idRedeSocialDeputado)
+    {
+        return $this->redeSocialDeputadoRepository->getRedeSocialDeputadoPorId($idRedeSocialDeputado);
     }
 
     /**
      * Formata a instância de 'RedesSociaisDeputado' para o modelo local.
      *
-     * @param array $redesSociais
+     * @param array $redeSocial
      * @param integer $idDeputado
      * @return array
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    private function formatarArrayRedesSociaisDeputado(array $redesSociais, $idDeputado)
+    private function formatarArrayRedeSocialDeputado(array $redeSocial, $idDeputado)
     {
         $redesSociaisDeputado = [];
 
-        foreach ($redesSociais as $redeSocial) {
-            $redesSociaisDeputado['co_rede_social'] = $redeSocial['id'];
+        $redeSocialAUX = $redeSocial['redeSocial'];
+        $redesSociaisDeputado['co_rede_social'] = $redeSocialAUX['id'];
 
-            $redeSocialCadastrada = $this->getTipoRedeSocialBO()->getTipoRedeSocialPorCodigo(
-                $redesSociaisDeputado['co_rede_social']
-            );
+        $redeSocialCadastrada = $this->getTipoRedeSocialBO()->getTipoRedeSocialPorCodigo(
+            $redesSociaisDeputado['co_rede_social']
+        );
 
-            if (empty($redeSocialCadastrada)) {
-                $redeSocialCadastrada = $this->getTipoRedeSocialBO()->persist($redeSocial);
-            }
-
-            $redesSociaisDeputado['id_deputado'] = $idDeputado;
-            $redesSociaisDeputado['ds_url_perfil'] = $redeSocial['url'];
-            $redesSociaisDeputado['id_tipo_rede_social'] = $redeSocialCadastrada->id;
+        if (empty($redeSocialCadastrada)) {
+            $redeSocialCadastrada = $this->getTipoRedeSocialBO()->persist($redeSocialAUX);
         }
+
+        $redesSociaisDeputado['id_deputado'] = $idDeputado;
+        $redesSociaisDeputado['ds_url_perfil'] = $redeSocial['url'];
+        $redesSociaisDeputado['id_tipo_rede_social'] = $redeSocialCadastrada->id;
 
         return $redesSociaisDeputado;
     }
 
     /**
-     * Atualiza a instância de 'Deputado' recebida conforme o 'id' informado.
+     * Atualiza a instância de 'RedeSocialDeputado' recebida conforme o 'id' informado.
      *
-     * @param array $newDeputado
-     * @return \App\Models\Deputado
+     * @param array $newRedeSocialDeputado
+     * @param RedeSocialDeputado $redeSocialDeputadoCadastrada
+     * @return \App\Models\RedeSocialDeputado
      * @throws \Exception
      */
-    private function update(array $newDeputado)
+    private function update(array $newRedeSocialDeputado, RedeSocialDeputado $redeSocialDeputadoCadastrada)
     {
-        $deputado = $this->getDeputadoPorCodigo($newDeputado['co_deputado']);
-
         try {
-            $deputado->ds_nome = $deputado['ds_nome'];
-            $deputado->ds_partido = $deputado['ds_partido'];
-            $deputado->ds_deputado = $deputado['ds_deputado'];
+            $redeSocialDeputadoCadastrada->ds_url_perfil = $newRedeSocialDeputado['ds_url_perfil'];
 
-            $deputado->save();
+            $redeSocialDeputadoCadastrada->save();
         } catch (\Exception $e) {
             throw $e;
         }
 
-        return $this->getDeputadoPorCodigo($newDeputado['co_deputado']);
+        return $this->getRedeSocialDeputadoPorId($redeSocialDeputadoCadastrada->id);
     }
 
 }

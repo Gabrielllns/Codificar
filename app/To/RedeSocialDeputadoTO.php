@@ -3,47 +3,117 @@
 
 namespace App\To;
 
-
-class DeputadoTO
+/**
+ * Class RedeSocialDeputadoTO
+ *
+ * @author Gabrielllns
+ * @package App\To
+ */
+class RedeSocialDeputadoTO
 {
+
     /**
      * @var integer
      */
-    private $id;
+    public $id;
 
     /**
-     * @var
+     * @var integer
      */
-    private $ds_nome;
+    public $id_deputado;
 
     /**
-     * @var
+     * @var integer
      */
-    private $co_deputado;
+    public $id_tipo_rede_social;
 
     /**
-     * @var
+     * @var string
      */
-    private $ds_partido;
+    public $ds_url_perfil;
 
     /**
-     * @var
+     * Fabrica de instância de 'RedeSocialDeputadoTO'.
+     *
+     * @param array $data
+     * @return \App\To\RedeSocialDeputadoTO
      */
-    private $ds_deputado;
+    public static function newInstance($data = null)
+    {
+        $redeSocialDeputadoTO = new RedeSocialDeputadoTO();
+
+        if ($data != null) {
+            $redeSocialDeputadoTO->setId($data['id']);
+            $redeSocialDeputadoTO->setIdDeputado($data['id_deputado']);
+            $redeSocialDeputadoTO->setDsUrlPerfil($data['ds_url_perfil']);
+            $redeSocialDeputadoTO->setIdTipoRedeSocial($data['id_tipo_rede_social']);
+        }
+
+        return $redeSocialDeputadoTO;
+    }
 
     /**
-     * @var
+     * @return integer
      */
-    private $created_at;
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
-     * @var
+     * @param integer $id
      */
-    private $updated_at;
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
-     * @var array
+     * @return integer
      */
-    private $redesSociaisDeputados;
+    public function getIdDeputado()
+    {
+        return $this->id_deputado;
+    }
+
+    /**
+     * @param integer $id_deputado
+     */
+    public function setIdDeputado($id_deputado)
+    {
+        $this->id_deputado = $id_deputado;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIdTipoRedeSocial()
+    {
+        return $this->id_tipo_rede_social;
+    }
+
+    /**
+     * @param integer $id_tipo_rede_social
+     */
+    public function setIdTipoRedeSocial($id_tipo_rede_social)
+    {
+        $this->id_tipo_rede_social = $id_tipo_rede_social;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDsUrlPerfil()
+    {
+        return $this->ds_url_perfil;
+    }
+
+    /**
+     * @param string $ds_url_perfil
+     */
+    public function setDsUrlPerfil($ds_url_perfil)
+    {
+        $this->ds_url_perfil = $ds_url_perfil;
+    }
 
 }
