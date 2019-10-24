@@ -38,10 +38,11 @@ class VerbaIndenizatoriaDeputadoRepository
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {
         return $this->verbaIndenizatoriaDeputado->with(['deputado'])
-            ->select(DB::raw('COUNT(id_deputado) as totalSolicitacoes, id_deputado'))
+            ->select(DB::raw('COUNT(id_deputado) AS nu_solicitacoes, SUM(valor_reembolsado) AS total_reembolso, id_deputado'))
             ->where('mes_emissao', '=', $mes)
             ->groupBy('id_deputado')
-            ->orderBy('totalSolicitacoes', 'DESC')
+            ->orderBy('nu_solicitacoes', 'DESC')
+            ->orderBy('total_reembolso', 'DESC')
             ->limit(5)->get();
     }
 

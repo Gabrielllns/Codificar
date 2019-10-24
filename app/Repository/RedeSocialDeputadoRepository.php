@@ -37,9 +37,9 @@ class RedeSocialDeputadoRepository
     public function getRedesSociaisMaisUsadas()
     {
         return $this->redeSocialDeputado->with(['tipoRedeSocial'])
-            ->select(DB::raw('SUM(id_tipo_rede_social) as totalRedesSociais, id_tipo_rede_social'))
+            ->select(DB::raw('SUM(id_tipo_rede_social) AS total, id_tipo_rede_social'))
             ->groupBy('id_tipo_rede_social')
-            ->orderBy('totalRedesSociais', 'DESC')
+            ->orderBy('total', 'DESC')
             ->get();
     }
 
