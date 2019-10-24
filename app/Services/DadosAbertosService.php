@@ -11,6 +11,8 @@ namespace App\Services;
 class DadosAbertosService
 {
 
+    const URL_SERVICE_WS = "http://dadosabertos.almg.gov.br/ws";
+
     /**
      * Retorna o array de deputados em exercício retornados pelo serviço.
      *
@@ -22,7 +24,9 @@ class DadosAbertosService
         $deputados = [];
 
         try {
-            $deputadosAtivos = file_get_contents("http://dadosabertos.almg.gov.br/ws/deputados/em_exercicio?formato=json");
+            $deputadosAtivos = file_get_contents(
+                self::URL_SERVICE_WS . "/deputados/em_exercicio?formato=json"
+            );
 
             if (!empty($deputadosAtivos)) {
                 $deputadosAtivos = json_decode($deputadosAtivos, true);
@@ -45,12 +49,42 @@ class DadosAbertosService
     public function getComplementosDeputado($idDeputado)
     {
         try {
-            $complementoDeputado = file_get_contents("http://dadosabertos.almg.gov.br/ws/deputados/" . $idDeputado . "?formato=json");
+            $complementoDeputado = file_get_contents(
+                self::URL_SERVICE_WS . "/deputados/" . $idDeputado . "?formato=json"
+            );
         } catch (\Exception $e) {
-            throw new \Exception("Recurso não encontrado para " . $idDeputado . "!");
+            throw new \Exception("Recurso não encontrado para o deputado " . $idDeputado . "!");
         }
 
         return json_decode($complementoDeputado, true);
+    }
+
+    /**
+     * Retorna o array de verbas indenizatórias conforme o 'mês' para o 'co_deputado' do deputado informado.
+     *
+     * @param integer $coDeputado
+     * @param integer $mes
+     * @return array
+     * @throws \Exception
+     */
+    public function getListaVerbasIndenizatoriasDeputadosPorMes($coDeputado, $mes)
+    {
+        $verbasIndenizatorias = [];
+
+        try {
+            $verbasIndenizatoriasDeputados = file_get_contents(
+                self::URL_SERVICE_WS . "/prestacao_contas/verbas_indenizatorias/deputados/" . $coDeputado . "/2019/" . $mes . "?formato=json"
+            );
+
+            if (!empty($verbasIndenizatoriasDeputados)) {
+                $verbasIndenizatoriasDeputados = json_decode($verbasIndenizatoriasDeputados, true);
+                $verbasIndenizatorias = $verbasIndenizatoriasDeputados['list'];
+            }
+        } catch (\Exception $e) {
+            throw new \Exception("Recurso não encontrado para o deputado " . $coDeputado . "!");
+        }
+
+        return $verbasIndenizatorias;
     }
 
 }

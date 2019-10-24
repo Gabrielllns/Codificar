@@ -34,6 +34,9 @@ class VerbaIndenizatoriaDeputado extends Model
      */
     protected $fillable = [
         'id_deputado',
+        'id_tipo_despesa',
+        'mes_emissao',
+        'valor_reembolsado'
     ];
 
     /**
@@ -51,6 +54,16 @@ class VerbaIndenizatoriaDeputado extends Model
     public function deputado()
     {
         return $this->belongsTo(Deputado::class, 'id_deputado');
+    }
+
+    /**
+     * Recupera a relação entre 'VerbaIndenizatoriaDeputado' e 'TipoDespesa'.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tipoDespesa()
+    {
+        return $this->belongsTo(TipoDespesa::class, 'id_tipo_despesa');
     }
 
 }

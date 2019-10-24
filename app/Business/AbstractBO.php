@@ -47,6 +47,28 @@ class AbstractBO
     }
 
     /**
+     * Retorna uma instância de 'VerbaIndenizatoriaDeputadoBO'.
+     *
+     * @return mixed
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function getVerbaIndenizatoriaDeputadoBO()
+    {
+        return app()->make(VerbaIndenizatoriaDeputadoBO::class);
+    }
+
+    /**
+     * Retorna uma instância de 'TipoDespesaBO'.
+     *
+     * @return mixed
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function getTipoDespesaBO()
+    {
+        return app()->make(TipoDespesaBO::class);
+    }
+
+    /**
      * Retorna uma instância de 'DadosAbertosService'.
      *
      * @return mixed

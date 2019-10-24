@@ -12,7 +12,12 @@ Route::middleware(['api'])->group(function () {
         Route::get('/', 'DeputadoController@getDeputados');
     });
 
-    Route::prefix('redeSociaisDeputados')->group(function () {
+    Route::prefix('redesSociaisDeputados')->group(function () {
         Route::get('/ordenar', 'RedeSocialDeputadoController@getRedesSociaisMaisUsadas');
+    });
+
+    Route::prefix('verbasIndenizatoriasDeputados')->group(function () {
+        Route::get('/mes/{mes}/carregar', 'VerbaIndenizatoriaDeputadoController@getListaVerbasIndenizatoriasDeputadosPorMes');
+        Route::get('/mes/{mes}', 'VerbaIndenizatoriaDeputadoController@getCincoMaioresSolicitacoesReembolsoDeputadosPorMes');
     });
 });

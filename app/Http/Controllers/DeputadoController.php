@@ -29,7 +29,7 @@ class DeputadoController extends Controller
     }
 
     /**
-     * Recupera e atualiza a lista de 'Deputados' ativos do serviço na base de dados.
+     * Recupera/atualiza a lista de 'Deputados' ativos do serviço na base de dados.
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException

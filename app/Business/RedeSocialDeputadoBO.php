@@ -32,6 +32,8 @@ class RedeSocialDeputadoBO extends AbstractBO
 
     /**
      * Retorna a lista das redes sociais mais utilizadas pelos deputados.
+     *
+     * @return RedeSocialDeputado[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function getRedesSociaisMaisUsadas()
     {

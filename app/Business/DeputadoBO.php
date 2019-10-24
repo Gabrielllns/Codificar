@@ -33,7 +33,7 @@ class DeputadoBO extends AbstractBO
     }
 
     /**
-     * Recupera e atualiza a lista de 'Deputados' ativos do serviço na base de dados.
+     * Recupera/atualiza a lista de 'Deputados' ativos do serviço na base de dados.
      *
      * @return array
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
