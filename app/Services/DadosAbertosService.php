@@ -56,7 +56,8 @@ class DadosAbertosService
             throw new \Exception("Recurso não encontrado para o deputado " . $idDeputado . "!");
         }
 
-        return json_decode($complementoDeputado, true);
+        $complementoDeputado = json_decode($complementoDeputado, true);
+        return $complementoDeputado['deputado'];
     }
 
     /**
