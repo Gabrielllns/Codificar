@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\RedeSocialDeputado;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class RedeSocialDeputadoRepository.
@@ -29,6 +30,18 @@ class RedeSocialDeputadoRepository
     }
 
     /**
+     * Retorna a lista das redes sociais mais utilizadas pelos deputados.
+     *
+     * @return RedeSocialDeputado[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getRedesSociaisMaisUsadas()
+    {
+        return $this->redeSocialDeputado->with(['tipoRedeSocial'])
+            ->select(DB::raw('SUM(id_tipo_rede_social) as total, id_tipo_rede_social'))
+            ->groupBy('id_tipo_rede_social')->orderBy('total', 'DESC')->get();
+    }
+
+    /**
      * Salva uma nova instância de 'RedeSocialDeputado'.
      *
      * @param array $redeSocialDeputado
@@ -48,8 +61,8 @@ class RedeSocialDeputadoRepository
      */
     public function getRedeSocialDeputado($idTipoRedeSocial, $idDeputado)
     {
-        return $this->redeSocialDeputado->with(['tipoRedesSociais'])
-            ->whereHas('tipoRedesSociais', function ($query) use ($idTipoRedeSocial) {
+        return $this->redeSocialDeputado->with(['tipoRedeSocial'])
+            ->whereHas('tipoRedeSocial', function ($query) use ($idTipoRedeSocial) {
                 $query->where('co_rede_social', '=', $idTipoRedeSocial);
             })->where('id_deputado', '=', $idDeputado)->first();
     }

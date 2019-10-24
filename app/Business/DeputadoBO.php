@@ -23,7 +23,7 @@ class DeputadoBO extends AbstractBO
     private $deputadoRepository;
 
     /**
-     * UserBO constructor.
+     * Construtor da classe.
      *
      * @param DeputadoRepository $deputadoRepository
      */

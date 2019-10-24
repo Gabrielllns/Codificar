@@ -20,7 +20,7 @@ class TipoRedeSocialBO extends AbstractBO
     private $tipoRedeSocialRepository;
 
     /**
-     * UserBO constructor.
+     * Construtor da classe.
      *
      * @param TipoRedeSocialRepository $tipoRedeSocialRepository
      */

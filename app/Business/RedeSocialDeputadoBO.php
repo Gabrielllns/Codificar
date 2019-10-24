@@ -21,13 +21,21 @@ class RedeSocialDeputadoBO extends AbstractBO
     private $redeSocialDeputadoRepository;
 
     /**
-     * UserBO constructor.
+     * Construtor da classe.
      *
      * @param RedeSocialDeputadoRepository $redeSocialDeputadoRepository
      */
     public function __construct(RedeSocialDeputadoRepository $redeSocialDeputadoRepository)
     {
         $this->redeSocialDeputadoRepository = $redeSocialDeputadoRepository;
+    }
+
+    /**
+     * Retorna a lista das redes sociais mais utilizadas pelos deputados.
+     */
+    public function getRedesSociaisMaisUsadas()
+    {
+        return $this->redeSocialDeputadoRepository->getRedesSociaisMaisUsadas();
     }
 
     /**
@@ -48,7 +56,8 @@ class RedeSocialDeputadoBO extends AbstractBO
             foreach ($redesSociais as $redeSocial) {
                 $redeSocialFormatada = $this->formatarArrayRedeSocialDeputado($redeSocial, $idDeputado);
 
-                $redeSocialDeputadoCadastrada = $this->getRedeSocialDeputado($redeSocialFormatada['co_rede_social'], $idDeputado);
+                $redeSocialDeputadoCadastrada = $this->getRedeSocialDeputado($redeSocialFormatada['co_rede_social'],
+                    $idDeputado);
                 if (!empty($redeSocialDeputadoCadastrada)) {
                     $redeSocialDeputado = $this->update($redeSocialFormatada, $redeSocialDeputadoCadastrada);
                 } else {

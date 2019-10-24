@@ -16,16 +16,27 @@ class RedeSocialDeputadoController extends Controller
     /**
      * @var RedeSocialDeputadoBO
      */
-    private $reseSocialDeputadoBO;
+    private $redeSocialDeputadoBO;
 
     /**
-     * DeputadoController constructor.
+     * RedeSocialDeputadoController constructor.
      *
-     * @param RedeSocialDeputadoBO $reseSocialDeputadoBO
+     * @param RedeSocialDeputadoBO $redeSocialDeputadoBO
      */
-    public function __construct(RedeSocialDeputadoBO $reseSocialDeputadoBO)
+    public function __construct(RedeSocialDeputadoBO $redeSocialDeputadoBO)
     {
-        $this->reseSocialDeputadoBO = $reseSocialDeputadoBO;
+        $this->redeSocialDeputadoBO = $redeSocialDeputadoBO;
+    }
+
+    /**
+     * Retorna a lista das redes sociais mais utilizadas pelos deputados.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRedesSociaisMaisUsadas()
+    {
+        $redesSociaisMaisUsadas = $this->redeSocialDeputadoBO->getRedesSociaisMaisUsadas();
+        return response()->json($redesSociaisMaisUsadas);
     }
 
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class TipoRedesSociais
+ * Class TipoRedeSocial
  *
  * @package App\Models
  * @author Gabrielllns
@@ -45,7 +45,7 @@ class TipoRedeSocial extends Model
     protected $hidden = [];
 
     /**
-     * Define a relação de 'TipoRedesSociais' e 'RedeSocialDeputado'.
+     * Define a relação de 'TipoRedeSocial' e 'RedeSocialDeputado'.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

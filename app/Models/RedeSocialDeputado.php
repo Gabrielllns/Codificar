@@ -56,11 +56,11 @@ class RedeSocialDeputado extends Model
     }
 
     /**
-     * Recupera a relação entre 'RedeSocialDeputado' e 'TipoRedesSociais'.
+     * Recupera a relação entre 'RedeSocialDeputado' e 'TipoRedeSocial'.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function tipoRedesSociais()
+    public function tipoRedeSocial()
     {
         return $this->belongsTo(TipoRedeSocial::class, 'id_tipo_rede_social');
     }
