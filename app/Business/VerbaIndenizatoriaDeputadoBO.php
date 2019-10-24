@@ -4,7 +4,6 @@ namespace App\Business;
 
 use App\Models\TipoDespesa;
 use App\Repository\VerbaIndenizatoriaDeputadoRepository;
-use App\To\TipoDespesaTO;
 use App\To\VerbaIndenizatoriaDeputadoTO;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +35,7 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
      * Recupera a lista dos cinco 'deputados' que mais solicitaram reembolso para o 'mês' informado.
      *
      * @param string $mes
-     * @return mixed
+     * @return \App\Models\VerbaIndenizatoriaDeputado[]
      */
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {
@@ -48,7 +47,7 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
      *
      * @param integer $mes
      * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Exception
      */
     public function getListaVerbasIndenizatoriasDeputadosPorMes($mes)
     {

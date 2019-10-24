@@ -33,7 +33,7 @@ class RedeSocialDeputadoBO extends AbstractBO
     /**
      * Retorna a lista das redes sociais mais utilizadas pelos deputados.
      *
-     * @return RedeSocialDeputado[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\RedeSocialDeputado[]
      */
     public function getRedesSociaisMaisUsadas()
     {
@@ -58,8 +58,11 @@ class RedeSocialDeputadoBO extends AbstractBO
             foreach ($redesSociais as $redeSocial) {
                 $redeSocialFormatada = $this->formatarArrayRedeSocialDeputado($redeSocial, $idDeputado);
 
-                $redeSocialDeputadoCadastrada = $this->getRedeSocialDeputado($redeSocialFormatada['co_rede_social'],
-                    $idDeputado);
+                $redeSocialDeputadoCadastrada = $this->getRedeSocialDeputado(
+                    $redeSocialFormatada['co_rede_social'],
+                    $idDeputado
+                );
+
                 if (!empty($redeSocialDeputadoCadastrada)) {
                     $redeSocialDeputado = $this->update($redeSocialFormatada, $redeSocialDeputadoCadastrada);
                 } else {

@@ -33,7 +33,7 @@ class VerbaIndenizatoriaDeputadoRepository
      * Recupera a lista dos cinco 'deputados' que mais solicitaram reembolso para o 'mês' informado.
      *
      * @param string $mes
-     * @return VerbaIndenizatoriaDeputado[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\VerbaIndenizatoriaDeputado[]
      */
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {

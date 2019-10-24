@@ -33,7 +33,7 @@ class VerbaIndenizatoriaDeputadoController extends Controller
      *
      * @param integer $mes
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Exception
      */
     public function getListaVerbasIndenizatoriasDeputadosPorMes($mes)
     {
@@ -46,7 +46,6 @@ class VerbaIndenizatoriaDeputadoController extends Controller
      *
      * @param string $mes
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {
