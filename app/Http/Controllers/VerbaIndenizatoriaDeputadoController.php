@@ -46,6 +46,7 @@ class VerbaIndenizatoriaDeputadoController extends Controller
      *
      * @param string $mes
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {

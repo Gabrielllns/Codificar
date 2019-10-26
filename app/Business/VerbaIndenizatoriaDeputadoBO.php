@@ -36,9 +36,14 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
      *
      * @param string $mes
      * @return \App\Models\VerbaIndenizatoriaDeputado[]
+     * @throws \Exception
      */
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {
+        if (intval($mes) < 1 || intval($mes) > 12) {
+            throw new \Exception("O mês informado é inválido!");
+        }
+
         return $this->verbaIndenizatoriaDeputadoRepository->getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes);
     }
 
@@ -137,7 +142,8 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
     private function formatarArrayVerbaIndenizatoriaDeputado(
         VerbaIndenizatoriaDeputadoTO $verbaIndenizatoriaDeputadoTO,
         TipoDespesa $tipoDespesa
-    ) {
+    )
+    {
         $verbaIndenizatoriaDeputado = [];
 
         $verbaIndenizatoriaDeputado['id_tipo_despesa'] = $tipoDespesa->id;

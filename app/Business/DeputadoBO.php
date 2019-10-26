@@ -88,7 +88,7 @@ class DeputadoBO extends AbstractBO
                 $coDeputado = $deputadoFormatado['co_deputado'];
                 $deputadoCadastrado = $this->getDeputadoPorCodigo($coDeputado);
                 if (!empty($deputadoCadastrado)) {
-                    $this->update($deputadoAtivo, $coDeputado);
+                    $this->update($deputadoFormatado, $coDeputado);
                     $deputado = $this->getDeputadoPorCodigo($coDeputado);
                 } else {
                     $deputado = $this->deputadoRepository->create($deputadoFormatado);
