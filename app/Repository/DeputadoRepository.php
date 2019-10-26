@@ -40,6 +40,16 @@ class DeputadoRepository
     }
 
     /**
+     * Recupera a total de 'Deputados' cadastrados na base.
+     *
+     * @return integer
+     */
+    public function getTotalDeputadosCadastrados()
+    {
+        return $this->deputado->select('id')->count();
+    }
+
+    /**
      * Recupera as instâncias de 'Deputado' cadastradas.
      *
      * @return \App\Models\Deputado[]

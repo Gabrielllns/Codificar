@@ -44,7 +44,7 @@ class VerbaIndenizatoriaDeputadoController extends Controller
     /**
      * Recupera a lista dos cinco 'deputados' que mais solicitaram reembolso para o 'mês' informado.
      *
-     * @param string $mes
+     * @param integer $mes
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */

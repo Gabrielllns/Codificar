@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Lang;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -51,13 +52,13 @@ class Handler extends ExceptionHandler
         if ($e instanceof QueryException) {
 
             if (env('APP_ENV') == 'local') {
-                return response()->json(['message' => 'ERRO DE BANCO: ' . $e->getMessage()], 500);
+                return response()->json(['message' => Lang::get('messages.MSG_FALHA_INESPERADA') . ' - ' . $e->getMessage()], 500);
             } else {
-                return response()->json(['message' => 'ERRO DE COMUNICAÇÃO COM A APLICAÇÃO!'], 500);
+                return response()->json(['message' => Lang::get('messages.MSG_FALHA_INESPERADA')], 500);
             }
         }
         if ($e instanceof NotFoundHttpException || $e instanceof ModelNotFoundException) {
-            return response()->json(['message' => 'RESULTADO NAO ENCONTRADO'], 400);
+            return response()->json(['message' => Lang::get('messages.MSG_RESULTADO_NAO_ENCONTRADO')], 400);
         }
 
         return parent::render($request, $e);

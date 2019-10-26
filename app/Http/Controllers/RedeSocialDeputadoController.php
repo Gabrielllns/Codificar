@@ -32,6 +32,7 @@ class RedeSocialDeputadoController extends Controller
      * Retorna a lista das redes sociais mais utilizadas pelos deputados.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function getRedesSociaisMaisUsadas()
     {

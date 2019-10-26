@@ -6,6 +6,7 @@ use App\Models\TipoDespesa;
 use App\Repository\VerbaIndenizatoriaDeputadoRepository;
 use App\To\VerbaIndenizatoriaDeputadoTO;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Class VerbaIndenizatoriaDeputadoBO.
@@ -34,15 +35,13 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
     /**
      * Recupera a lista dos cinco 'deputados' que mais solicitaram reembolso para o 'mês' informado.
      *
-     * @param string $mes
+     * @param integer $mes
      * @return \App\Models\VerbaIndenizatoriaDeputado[]
      * @throws \Exception
      */
     public function getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes)
     {
-        if (intval($mes) < 1 || intval($mes) > 12) {
-            throw new \Exception("O mês informado é inválido!");
-        }
+        $this->validarInformacoes($mes);
 
         return $this->verbaIndenizatoriaDeputadoRepository->getCincoMaioresSolicitacoesReembolsoDeputadosPorMes($mes);
     }
@@ -56,11 +55,9 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
      */
     public function getListaVerbasIndenizatoriasDeputadosPorMes($mes)
     {
-        $verbasIndenizatorias = [];
+        $this->validarInformacoes($mes);
 
-        if (intval($mes) < 1 || intval($mes) > 12) {
-            throw new \Exception("O mês informado é inválido!");
-        }
+        $verbasIndenizatorias = [];
 
         $deputados = $this->getDeputadoBO()->getDeputados();
         foreach ($deputados as $deputado) {
@@ -152,6 +149,23 @@ class VerbaIndenizatoriaDeputadoBO extends AbstractBO
         $verbaIndenizatoriaDeputado['valor_reembolsado'] = $verbaIndenizatoriaDeputadoTO->getValorReembolsado();
 
         return $verbaIndenizatoriaDeputado;
+    }
+
+    /**
+     * Valida as informações relevantes para as consultas de 'VerbaIndenizatoriaDeputado'.
+     *
+     * @param integer $mes
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\Exception
+     */
+    private function validarInformacoes($mes)
+    {
+        if (!$this->getDeputadoBO()->hasDeputadosCadastrados()) {
+            throw new \Exception(Lang::get('messages.MSG_NAO_HA_DEPUTADOS_CADASTRADOS_IMPORTE'));
+        }
+
+        if (intval($mes) < 1 || intval($mes) > 12) {
+            throw new \Exception(Lang::get('messages.MSG_MES_INFORMADO_INVALIDO'));
+        }
     }
 
 }

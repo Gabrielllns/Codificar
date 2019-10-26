@@ -5,6 +5,7 @@ namespace App\Business;
 use App\Models\RedeSocialDeputado;
 use App\Repository\RedeSocialDeputadoRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Class RedeSocialDeputadoBO.
@@ -34,9 +35,12 @@ class RedeSocialDeputadoBO extends AbstractBO
      * Retorna a lista das redes sociais mais utilizadas pelos deputados.
      *
      * @return \App\Models\RedeSocialDeputado[]
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function getRedesSociaisMaisUsadas()
     {
+        $this->validarInformacoes();
+
         return $this->redeSocialDeputadoRepository->getRedesSociaisMaisUsadas();
     }
 
@@ -153,6 +157,18 @@ class RedeSocialDeputadoBO extends AbstractBO
         }
 
         return $this->getRedeSocialDeputadoPorId($redeSocialDeputadoCadastrada->id);
+    }
+
+    /**
+     * Valida as informações relevantes para as consultas de 'RedeSocialDeputado'.
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\Exception
+     */
+    private function validarInformacoes()
+    {
+        if (!$this->getDeputadoBO()->hasDeputadosCadastrados()) {
+            throw new \Exception(Lang::get('messages.MSG_NAO_HA_DEPUTADOS_CADASTRADOS_IMPORTE'));
+        }
     }
 
 }

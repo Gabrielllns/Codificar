@@ -6,6 +6,7 @@ use App\Repository\DeputadoRepository;
 use App\To\DeputadoTO;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Validator;
 
 /**
@@ -56,12 +57,25 @@ class DeputadoBO extends AbstractBO
     }
 
     /**
+     * Verifica se existem 'Deputados' cadastrados na base.
+     *
+     * @return boolean
+     */
+    public function hasDeputadosCadastrados()
+    {
+        $totalDeputadosCadastrados = $this->deputadoRepository->getTotalDeputadosCadastrados();
+        return ($totalDeputadosCadastrados > 0);
+    }
+
+    /**
      * Recupera as instâncias de 'Deputado' cadastradas.
      *
      * @return \App\Models\Deputado[]
+     * @throws \Exception
      */
     public function getDeputados()
     {
+        $this->validarInformacoes();
         return $this->deputadoRepository->getDeputados();
     }
 
@@ -177,6 +191,18 @@ class DeputadoBO extends AbstractBO
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
+        }
+    }
+
+    /**
+     * Valida as informações relevantes para as consultas de 'Deputado'.
+     *
+     * @throws \Exception
+     */
+    private function validarInformacoes()
+    {
+        if (!$this->hasDeputadosCadastrados()) {
+            throw new \Exception(Lang::get('messages.MSG_NAO_HA_DEPUTADOS_CADASTRADOS_IMPORTE'));
         }
     }
 

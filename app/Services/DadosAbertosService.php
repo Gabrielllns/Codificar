@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Lang;
+
 /**
  * Class DadosAbertosService.
  *
@@ -33,7 +35,7 @@ class DadosAbertosService
                 $deputados = $deputadosAtivos['list'];
             }
         } catch (\Exception $e) {
-            throw new \Exception("Recurso não encontrado!");
+            throw new \Exception($this->getMensagemExceptionPorCodigo($e->getCode()));
         }
 
         return $deputados;
@@ -53,7 +55,7 @@ class DadosAbertosService
                 self::URL_SERVICE_WS . "/deputados/" . $idDeputado . "?formato=json"
             );
         } catch (\Exception $e) {
-            throw new \Exception("Recurso não encontrado para o deputado " . $idDeputado . "!");
+            throw new \Exception(Lang::get('messages.MSG_RECURSO_NAO_ENCONTRADO_DEPUTADO', ['idDeputado' => $idDeputado]));
         }
 
         $complementoDeputado = json_decode($complementoDeputado, true);
@@ -82,10 +84,30 @@ class DadosAbertosService
                 $verbasIndenizatorias = $verbasIndenizatoriasDeputados['list'];
             }
         } catch (\Exception $e) {
-            throw new \Exception("Recurso não encontrado para o deputado " . $coDeputado . "!");
+            throw new \Exception(Lang::get('messages.MSG_RECURSO_NAO_ENCONTRADO_DEPUTADO', ['idDeputado' => $coDeputado]));
         }
 
         return $verbasIndenizatorias;
+    }
+
+    /**
+     * Retorna a mensagem de erro padronizada conforme o 'código' do erro retornado pelo serviço.
+     *
+     * @param $codigoErro
+     * @return string
+     */
+    private function getMensagemExceptionPorCodigo($codigoErro)
+    {
+        $mensagem = null;
+
+        switch ($codigoErro) {
+
+            case '0':
+                $mensagem = Lang::get('messages.MSG_HOST_NAO_RECONHECIDO');
+                break;
+        }
+
+        return $mensagem;
     }
 
 }

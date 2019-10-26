@@ -44,6 +44,7 @@ class DeputadoController extends Controller
      * Recupera as instâncias de 'Deputado' cadastradas.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function getDeputados()
     {
